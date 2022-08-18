@@ -296,8 +296,8 @@ class SoccerNetClips(Dataset):
                                 representation_half1[i,y_top_left:y_bottom_right, x_top_left:x_bottom_right,1] = np.uint8(int(color[1]))
                                 representation_half1[i,y_top_left:y_bottom_right, x_top_left:x_bottom_right,2] = np.uint8(int(color[2]))
                 #Visualization
-                #for i, frame in enumerate(representation_half1):
-                #    cv2.imwrite("outputs/test/"+str(i)+".png", frame)
+                for i, frame in enumerate(representation_half1):
+                   cv2.imwrite("outputs/test/"+str(i)+".png", frame)
                 #ygfdtffr
 
                 if self.args.with_resnet > 0:
@@ -423,8 +423,8 @@ class SoccerNetClips(Dataset):
                     np.save(os.path.join(self.path, game, "2_" + self.features_resnet),representation_half2)
 
                 # Visualization
-                #for i, frame in enumerate(representation_half2):
-                #    cv2.imwrite("outputs/test/"+str(i)+".png", frame)
+                for i, frame in enumerate(representation_half2):
+                   cv2.imwrite("outputs/test/"+str(i)+".png", frame)
 
             
       
@@ -634,19 +634,19 @@ class SoccerNetClipsTesting(Dataset):
 
         clip_representation_half1 = None
         clip_representation_half2 = None
-        if self.args.backbone_player == "3DConv" and self.args.with_resnet >0 and os.path.exists(os.path.join(self.path, self.listGames[index], "1_" + self.features_resnet)) and os.path.exists(os.path.join(self.path, self.listGames[index], "2_" + self.features_resnet)):
-            clip_representation_half1 = np.load(os.path.join(self.path, self.listGames[index], "1_" + self.features_resnet))
-            clip_representation_half2 = np.load(os.path.join(self.path, self.listGames[index], "2_" + self.features_resnet))
+        # if self.args.backbone_player == "3DConv" and self.args.with_resnet >0 and os.path.exists(os.path.join(self.path, self.listGames[index], "1_" + self.features_resnet)) and os.path.exists(os.path.join(self.path, self.listGames[index], "2_" + self.features_resnet)):
+        #     clip_representation_half1 = np.load(os.path.join(self.path, self.listGames[index], "1_" + self.features_resnet))
+        #     clip_representation_half2 = np.load(os.path.join(self.path, self.listGames[index], "2_" + self.features_resnet))
 
-            clip_representation_half1 = feats2clip(torch.from_numpy(clip_representation_half1), 
-                            stride=self.chunk_size-self.receptive_field, 
-                            clip_length=self.chunk_size)
+        #     clip_representation_half1 = feats2clip(torch.from_numpy(clip_representation_half1), 
+        #                     stride=self.chunk_size-self.receptive_field, 
+        #                     clip_length=self.chunk_size)
 
-            clip_representation_half2 = feats2clip(torch.from_numpy(clip_representation_half2), 
-                            stride=self.chunk_size-self.receptive_field, 
-                            clip_length=self.chunk_size)
+        #     clip_representation_half2 = feats2clip(torch.from_numpy(clip_representation_half2), 
+        #                     stride=self.chunk_size-self.receptive_field, 
+        #                     clip_length=self.chunk_size)
             
-        elif self.args.backbone_player == "3DConv":
+        if self.args.backbone_player == "3DConv":
             if self.args.calibration:
                 clip_representation_half1 = np.zeros((feat_half1.shape[0], self.representation_height, self.representation_width, self.representation_channel), dtype = np.uint8)
                 clip_representation_half2 = np.zeros((feat_half2.shape[0], self.representation_height, self.representation_width, self.representation_channel), dtype = np.uint8)
@@ -727,6 +727,10 @@ class SoccerNetClipsTesting(Dataset):
                         color_np = np.array([(color[0]/127)-1, (color[1]/127)-1, (color[2]/127)-1])
                         if x_bottom_right > x_top_left and y_bottom_right > y_top_left:
                             clip_representation_half1[i,y_top_left:y_bottom_right, x_top_left:x_bottom_right] = color_np
+            
+            #Visualization
+            for i, frame in enumerate(clip_representation_half1):
+                   cv2.imwrite("outputs/test/"+str(i)+"_first.png", frame)
 
             ratio_width = bbox_half2["size"][2]/self.representation_width
             ratio_height = bbox_half2["size"][1]/self.representation_height
@@ -801,7 +805,9 @@ class SoccerNetClipsTesting(Dataset):
                         if x_bottom_right > x_top_left and y_bottom_right > y_top_left:
                             clip_representation_half2[i,y_top_left:y_bottom_right, x_top_left:x_bottom_right] = color_np
 
-            
+            #Visualization
+            for i, frame in enumerate(clip_representation_half1):
+                   cv2.imwrite("outputs/test/"+str(i)+"_second.png", frame)
 
             if self.args.with_resnet > 0:
                 clip_representation_half1_np = np.zeros(feat_half1.shape)
@@ -892,6 +898,10 @@ class SoccerNetClipsTesting(Dataset):
         if self.args.backbone_player is None:
             clip_representation_half1 = torch.zeros(feat_half1.shape[0], 1)
             clip_representation_half2 = torch.zeros(feat_half2.shape[0], 1)
+
+        #Visualization
+        # for i, frame in enumerate(clip_representation_half1.cpu().detach().numpy()):
+        #     cv2.imwrite("outputs/test/"+str(i)+"_third.png", frame)
 
         return feat_half1, feat_half2, torch.from_numpy(label_half1), torch.from_numpy(label_half2), clip_representation_half1, clip_representation_half2
 

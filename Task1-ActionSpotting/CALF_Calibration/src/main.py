@@ -102,6 +102,7 @@ def main(args):
 
 
 if __name__ == '__main__':
+    torch.multiprocessing.set_start_method('spawn')# good solution !!!!
 
     # Load the arguments
     parser = ArgumentParser(description='context aware loss function', formatter_class=ArgumentDefaultsHelpFormatter)

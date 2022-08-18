@@ -143,3 +143,6 @@ Task1-ActionSpotting/CALF_Calibration_GCN/outputs/
 Task1-ActionSpotting/CALF_Calibration/log/
 Task1-ActionSpotting/CALF_Calibration/models/
 Task1-ActionSpotting/CALF_Calibration/outputs/
+
+.vscode
+models/
