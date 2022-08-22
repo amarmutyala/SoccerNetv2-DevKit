@@ -714,10 +714,12 @@ class SoccerNetClipsTesting(Dataset):
                             if self.args.calibration_physic:
                                 clip_representation_half1[i,radar_point[1]-self.size_radar_point//2:radar_point[1]+self.size_radar_point//2, radar_point[0]-self.size_radar_point//2:radar_point[0]+self.size_radar_point//2,0] = 255
                             else:
-                                clip_representation_half1[i,radar_point[1]-self.size_radar_point//2:radar_point[1]+self.size_radar_point//2, radar_point[0]-self.size_radar_point//2:radar_point[0]+self.size_radar_point//2,0] = np.uint8(int(color[0]))
-                                clip_representation_half1[i,radar_point[1]-self.size_radar_point//2:radar_point[1]+self.size_radar_point//2, radar_point[0]-self.size_radar_point//2:radar_point[0]+self.size_radar_point//2,1] = np.uint8(int(color[1]))
-                                clip_representation_half1[i,radar_point[1]-self.size_radar_point//2:radar_point[1]+self.size_radar_point//2, radar_point[0]-self.size_radar_point//2:radar_point[0]+self.size_radar_point//2,2] = np.uint8(int(color[2]))
-                
+                                # clip_representation_half1[i,radar_point[1]-self.size_radar_point//2:radar_point[1]+self.size_radar_point//2, radar_point[0]-self.size_radar_point//2:radar_point[0]+self.size_radar_point//2,0] = np.uint8(int(color[0]))
+                                # clip_representation_half1[i,radar_point[1]-self.size_radar_point//2:radar_point[1]+self.size_radar_point//2, radar_point[0]-self.size_radar_point//2:radar_point[0]+self.size_radar_point//2,1] = np.uint8(int(color[1]))
+                                # clip_representation_half1[i,radar_point[1]-self.size_radar_point//2:radar_point[1]+self.size_radar_point//2, radar_point[0]-self.size_radar_point//2:radar_point[0]+self.size_radar_point//2,2] = np.uint8(int(color[2]))
+                                clip_representation_half1[i] = cv2.circle(clip_representation_half1[i], (radar_point[0], radar_point[1]), 5, (int(color[0]),int(color[1]) , int(color[2])), -1)
+
+
                 else:
                     for box, color in zip(bbox["bboxes"], bbox["colors"]):
                         x_top_left = min(max(0,int(box[0]/ratio_width)),self.representation_width-1)
@@ -783,6 +785,7 @@ class SoccerNetClipsTesting(Dataset):
                                         clip_representation_half2[i,radar_point[1]-self.size_radar_point//2:radar_point[1]+self.size_radar_point//2, radar_point[0]-self.size_radar_point//2:radar_point[0]+self.size_radar_point//2,0] = np.uint8(int(color[0]*self.trail_alpha[j]))
                                         clip_representation_half2[i,radar_point[1]-self.size_radar_point//2:radar_point[1]+self.size_radar_point//2, radar_point[0]-self.size_radar_point//2:radar_point[0]+self.size_radar_point//2,1] = np.uint8(int(color[1]*self.trail_alpha[j]))
                                         clip_representation_half2[i,radar_point[1]-self.size_radar_point//2:radar_point[1]+self.size_radar_point//2, radar_point[0]-self.size_radar_point//2:radar_point[0]+self.size_radar_point//2,2] = np.uint8(int(color[2]*self.trail_alpha[j]))
+                                        clip_representation_half2 = cv2.circle(clip_representation_half2, (radar_point[0], radar_point[1]), 20, (int(color[0]),int(color[1]) , int(color[2])), -1)
 
                     for box, color in zip(bbox["bboxes"], bbox["colors"]):
                         projection_point = np.array([int((box[0]+box[2])/2), box[3], 1])
